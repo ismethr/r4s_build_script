@@ -156,6 +156,14 @@ curl -s https://$mirror/openwrt/patch/openwrt-6.1/500-world-regd-5GHz.patch > pa
 rm -rf package/kernel/mac80211
 cp -a ../master/mj22226_openwrt/package/kernel/mac80211 package/kernel/mac80211
 
+# mac80211/patches/rtl - rtw88
+mkdir -p package/kernel/mac80211/patches/rtl
+curl -s https://$mirror/openwrt/patch/mac80211/900-hack-rtw88-phy.patch > package/kernel/mac80211/patches/rtl/900-hack-rtw88-phy.patch
+curl -s https://$mirror/openwrt/patch/mac80211/901-wifi-rtw88-8822b-disable-call-trace-when-write-RF-mo.patch > package/kernel/mac80211/patches/rtl/901-wifi-rtw88-8822b-disable-call-trace-when-write-RF-mo.patch
+curl -s https://$mirror/openwrt/patch/mac80211/903-wifi-rtw88-Remove-duplicate-NULL-check-before-callin.patch > package/kernel/mac80211/patches/rtl/903-wifi-rtw88-Remove-duplicate-NULL-check-before-callin.patch
+curl -s https://$mirror/openwrt/patch/mac80211/904-wifi-rtw88-usb-kill-and-free-rx-urbs-on-probe-failur.patch > package/kernel/mac80211/patches/rtl/904-wifi-rtw88-usb-kill-and-free-rx-urbs-on-probe-failur.patch
+curl -s https://$mirror/openwrt/patch/mac80211/905-wifi-rtw88-add-missing-call-to-cancel_work_sync.patch > package/kernel/mac80211/patches/rtl/905-wifi-rtw88-add-missing-call-to-cancel_work_sync.patch
+
 # kernel patch
 # cpu model
 curl -s https://$mirror/openwrt/patch/kernel-6.1/312-arm64-cpuinfo-Add-model-name-in-proc-cpuinfo-for-64bit-ta.patch > target/linux/generic/pending-6.1/312-arm64-cpuinfo-Add-model-name-in-proc-cpuinfo-for-64bit-ta.patch
@@ -175,10 +183,4 @@ cp -a ../master/openwrt/package/kernel/ubnt-ledbar package/kernel/ubnt-ledbar
 if [ "$platform" = "rk3399" ] || [ "$platform" = "rk3568" ]; then
     curl -s https://$mirror/openwrt/patch/rtc/sysfixtime > package/base-files/files/etc/init.d/sysfixtime
     chmod 755 package/base-files/files/etc/init.d/sysfixtime
-fi
-
-# Fix BPF Type Format - Linux-6.1 GCC11
-if [ "$ENABLE_BPF" = "y" ]; then
-    sed -i "s/CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=y/# CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT is not set/g" target/linux/generic/config-6.1
-    sed -i "s/# CONFIG_DEBUG_INFO_DWARF4 is not set/CONFIG_DEBUG_INFO_DWARF4=y/g" target/linux/generic/config-6.1
 fi

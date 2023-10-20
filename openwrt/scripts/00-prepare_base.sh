@@ -80,6 +80,8 @@ fi
 
 # Mbedtls AES & GCM Crypto Extensions
 if [ ! "$platform" = "x86_64" ]; then
+    rm -rf package/libs/mbedtls
+    cp -a ../master/openwrt/package/libs/mbedtls package/libs/mbedtls
     curl -s https://$mirror/openwrt/patch/mbedtls-23.05/200-Implements-AES-and-GCM-with-ARMv8-Crypto-Extensions.patch > package/libs/mbedtls/patches/200-Implements-AES-and-GCM-with-ARMv8-Crypto-Extensions.patch
     curl -s https://$mirror/openwrt/patch/mbedtls-23.05/mbedtls.patch | patch -p1
 fi
@@ -277,6 +279,11 @@ git clone https://github.com/sbwml/package_network_services_ppp package/network/
 # urngd - 2020-01-21
 rm -rf package/system/urngd
 git clone https://github.com/sbwml/package_system_urngd package/system/urngd
+
+# zlib - 1.3
+ZLIB_VERSION=1.3
+ZLIB_HASH=8a9ba2898e1d0d774eca6ba5b4627a11e5588ba85c8851336eb38de4683050a7
+sed -ri "s/(PKG_VERSION:=)[^\"]*/\1$ZLIB_VERSION/;s/(PKG_HASH:=)[^\"]*/\1$ZLIB_HASH/" package/libs/zlib/Makefile
 
 # profile
 sed -i 's#\\u@\\h:\\w\\\$#\\[\\e[32;1m\\][\\u@\\h\\[\\e[0m\\] \\[\\033[01;34m\\]\\W\\[\\033[00m\\]\\[\\e[32;1m\\]]\\[\\e[0m\\]\\\$#g' package/base-files/files/etc/profile
